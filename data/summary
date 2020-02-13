@@ -1,0 +1,38 @@
+[{
+	"classify":"扫街",
+	"info":[{
+		"title":"豫园",
+		"img":"./images/head.webp",
+		"url":"./data/street/豫园/content"
+	},{
+		"title":"田子坊",
+		"img":"./images/head.webp",
+		"url":"./data/street/田子坊/content"
+	}]
+},{
+	"classify":"人像",
+	"info":[{
+		"title":"御姐写真",
+		"img":"./images/head.webp",
+		"url":"./data/portrait/御姐写真/content"
+	},{
+		"title":"型男写真",
+		"img":"./images/head.webp",
+		"url":"./data/portrait/型男写真/content"
+	}]
+},{
+	"classify":"旅行",
+	"info":[{
+		"title":"敦煌",
+		"img":"./images/head.webp",
+		"url":"./data/travel/敦煌/content"
+	},{
+		"title":"西湖",
+		"img":"./images/head.webp",
+		"url":"./data/travel/西湖/content"
+	},{
+		"title":"西塘",
+		"img":"./images/head.webp",
+		"url":"./data/travel/西塘/content"
+	}]
+}]

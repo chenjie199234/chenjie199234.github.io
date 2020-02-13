@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="zh-cn">
+	<head>
+		<base href="./" target="_blank">
+		<meta charset="utf-8">
+		<meta name="author" content="">
+		<meta name="keywords" content="">
+		<meta name="description" content="">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Nobody's Blog</title>
+		<script src="https://cdn.jsdelivr.net/npm/axios@0.19.2/dist/axios.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/animejs@3.1.0/lib/anime.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.min.js"></script>
+		<style>
+			html{
+				-ms-overflow-style: none;
+				overflow: -moz-scrollbars-none;
+				scrollbar-width: none;
+			}
+			html::-webkit-scrollbar{
+				display: none;
+			}
+			html,body{
+				margin:0;
+				padding:0;
+				min-width:1080px;
+			}
+			p{
+				padding:0px;
+				margin:5px;
+				color:rgb(125,125,125);
+				font-size:125%;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app" style="display:none" :style="appStyle" @click="selected.showPanel=false">
+			<div id="left" :style="leftStyle">
+				<img :style="welcomeImgStyle" :src="imgInfo.startImg[0]" />
+			</div>
+			<div id="medium" :style="mediumStyle">
+				<div id="head" :style="headStyle">
+					<p style="font-size:150%"><b>I'm</b></p>
+					<p style="font-size:150%"><b>A</b></p>
+					<p style="font-size:150%"><b>Photographer/Traveler/Programmer</b></p>
+					<svg width="325" height="87" xmlns="http://www.w3.org/2000/svg" version="1.1">
+						<text y="71.5" x="0" font-size="60" stroke="black" fill="none">I'm Nobody</text>
+					</svg>
+				</div>
+				<div id="body" :style="bodyStyle">
+					<div :style="funcBtnStyle" style="left:20px;bottom:90px" @mouseover="LoveOp($event)" @mouseout="LoveOp($event)" @click="LoveOp($event)">
+						<img style="width:50px;height:50px" :src="imgInfo.loveImg[0]" />
+						<img style="width:50px;height:50px;display:none" :src="imgInfo.loveImg[1]" />
+					</div>
+					<div :style="funcBtnStyle" style="left:20px;bottom:20px" @mouseover="MenuOp($event)" @mouseout="MenuOp($event)" @click.stop="MenuOp($event)">
+						<img style="width:50px;height:50px" :src="imgInfo.menuImg[0]" />
+						<img style="width:50px;height:50px;display:none" :src="imgInfo.menuImg[1]" />
+					</div>
+					<div :style="panelStyle" @click.stop="">
+						<div :style="panelAreaStyle" v-if="selected.classifyTarget!=null && selected.classifyIndex>=0">
+							<div :style="summaryStyle" v-for="(d,i) in summaryInfo[selected.classifyIndex].info" @click="ContentTransform($event,i)">
+								<img style="width:150px;height:100px" :src=d.img />
+								<p style="width:150px;text-overflow:ellipsis;overflow:hidden;">{{ d.title }}</p>
+							</div>
+						</div>
+						<hr style="width:100%;color:rgb(125,125,125)" v-if="selected.classifyTarget!=null && selected.classifyIndex>=0" />
+						<div :style="panelAreaStyle">
+							<div :style="panelClassifyStyle" @mouseover="PanelOp($event,-1)" @mouseout="PanelOp($event,-1)" @click="PanelOp($event,-1)">
+							主页
+							</div>
+							<div v-for="(d,i) in summaryInfo" :style="panelClassifyStyle" @mouseover="PanelOp($event,i)" @mouseout="PanelOp($event,i)" @click="PanelOp($event,i)">
+								{{ d.classify }}
+							</div>
+						</div>
+					</div>
+					<div id="content" :style="contentStyle">
+						<div id="blog" :style="homeStyle">
+							<div :style="homeImgStyle">
+								<img style="width:150px;height:150px" :src="imgInfo.blogImg[0]" />
+							</div>
+							<div :style="homeWordStyle">
+								<p style="font-size:250%"><b>Blog</b></p>
+								<p>I write these articles on this site</p>
+								<p>Record my life and journey</p>
+								<p>Share my happy and sad</p>
+								<p>Show you the world</p>
+								<div id="blogButton" :style="buttonStyle" style="width:100px" @mouseover="ButtonOp($event)" @mouseout="ButtonOp($event)" @mousedown="ButtonOp($event)" @mouseup="ButtonOp($event)" @click.stop="">FIND</div>
+							</div>
+						</div>
+						<div id="vlog" :style="homeStyle">
+							<div :style="homeWordStyle">
+								<p style="font-size:250%"><b>Vlog</b></p>
+								<p>My videos on bilibili.com</p>
+								<div id="vlogButton" :style="buttonStyle" style="width:100px" @mouseover="ButtonOp($event)" @mouseout="ButtonOp($event)" @mousedown="ButtonOp($event)" @mouseup="ButtonOp($event)">FIND</div>
+							</div>
+							<div :style="homeImgStyle">
+								<img style="width:150px;height:150px" :src="imgInfo.vlogImg[0]" />
+							</div>
+						</div>
+						<div id="camera" :style="homeStyle">
+							<div :style="homeImgStyle">
+								<img style="width:150px;height:150px" :src="imgInfo.cameraImg[0]" />
+							</div>
+							<div :style="homeWordStyle">
+								<p style="font-size:250%"><b>Equipment</b></p>
+								<p>Camera:</p>
+								<p>Nikon D750</p>
+								<p>Lens:</p>
+								<p>Sigma 35 f1.4 Art</p>
+								<p>Tamron 85 f1.8 SP</p>
+								<p>Flash:</p>
+								<p>Godox 850II</p>
+								<p>Godox xt1-n</p>
+							</div>
+						</div>
+						<div id="info" :style="homeStyle">
+							<div :style="homeWordStyle">
+								<p style="font-size:250%"><b>Contact</b></p>
+								<p>Address:</p>
+								<p>China ShangHai</p>
+								<p>Email:</p>
+								<p>517464047@qq.com</p>
+								<p>chenjie199234@gmail.com</p>
+								<p>chenjie199234@outlook.com</p>
+								<p>QQ:</p>
+								<p>517464047</p>
+								<p>WeChat:</p>
+								<p>cj517464047</p>
+							</div>
+							<div :style="homeImgStyle">
+								<img style="width:150px;height:150px" :src="imgInfo.infoImg[0]" />
+							</div>
+						</div>
+						<article :style="articleStyle" v-html="selected.content">
+						</article>
+					</div>
+				</div>
+				<div id="foot" :style="footStyle">
+					<p><b>Powered by Nobody</b></p>
+				</div>
+			</div>
+			<div id="right" :style="rightStyle">
+				<p style="font-size:250%"><b>Welcome to Nobody's blog</b></p>
+				<p>A thousand journey is started by taking the first step.</p>
+				<p>Give your dream a chance and never give up!</p>
+				<div id="startButton" :style="buttonStyle" style="width:25%" @mouseover="ButtonOp($event)" @mouseout="ButtonOp($event)" @mousedown="ButtonOp($event)" @mouseup="ButtonOp($event)">Enter</div>
+			</div>
+		</div>
+		<script src="./js/index.js"></script>
+	</body>
+</html>
