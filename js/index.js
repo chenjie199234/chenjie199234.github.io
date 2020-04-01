@@ -288,6 +288,9 @@ var app=new Vue({
 		},
 	},
 	methods:{
+		Test(){
+			console.log(123)
+		},
 		//page operation
 		ButtonOp(opEvent){
 			switch(opEvent.type){
@@ -424,8 +427,11 @@ var app=new Vue({
 						easing: 'easeInOutSine',
 						complete:function(){
 							app.pageStatus = page.main
+							app.PageTransform()
 						},
 					}).play()
+					break
+				case page.main:
 					anime.set(['#head p','#body','#head svg text'],{
 						opacity:0,
 					})
@@ -433,7 +439,6 @@ var app=new Vue({
 						targets:['#head p','#body'],
 						opacity:1,
 						easing: 'easeInOutSine',
-						delay: 500,
 						duration: 2500,
 					}).play()
 					anime.set('#head',{
@@ -443,7 +448,6 @@ var app=new Vue({
 						targets:'#head',
 						translateY: 0,
 						duration: 250,
-						delay: 500,
 						easing: 'spring(1,75,5,0)',
 						complete:function(){
 							anime({
@@ -474,7 +478,7 @@ var app=new Vue({
 						if (index>=0){
 							app.selected.summaryTarget = opEvent.target.parentNode
 							app.selected.summaryIndex = index
-							app.GetContentInfo()
+							app.GetContentInfo(app.summaryInfo[app.selected.classifyIndex].info[app.selected.summaryIndex].url)
 						}else{
 							app.selected.summaryTarget = null
 							app.selected.summaryIndex = -1
@@ -499,8 +503,8 @@ var app=new Vue({
 					console.log(err)
 				})
 		},
-		GetContentInfo(){
-			axios.get(app.summaryInfo[app.selected.classifyIndex].info[app.selected.summaryIndex].url)
+		GetContentInfo(url){
+			axios.get(url)
 				.then(function(res){
 					app.selected.content = res.data
 				})
@@ -512,6 +516,12 @@ var app=new Vue({
 		},
 	},
 	mounted(){
+		let urlOBJ = new URL(window.location.href)
+		let urlValue = urlOBJ.searchParams.get("url")
+		if (urlValue != "" && urlValue != null && urlValue != undefined){
+			this.pageStatus=page.main
+			this.GetContentInfo(urlValue)
+		}
 		this.GetSummaryInfo()
 		this.PageTransform()
 		window.onresize = () => {
