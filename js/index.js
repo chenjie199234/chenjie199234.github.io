@@ -29,6 +29,7 @@ var app=new Vue({
 			summaryTarget:null,
 			summaryIndex:-1,
 			content:"",
+			jumpfrom:false,
 		},
 	},
 	computed:{
@@ -203,7 +204,7 @@ var app=new Vue({
 				'justify-content':'center',
 				'align-items':'center',
 			}
-			if (this.selected.summaryIndex >= 0){
+			if (this.selected.summaryIndex >= 0 || this.selected.jumpfrom){
 				temp['display']='none'
 			}else{
 				temp['display']='flex'
@@ -233,7 +234,7 @@ var app=new Vue({
 			let temp={
 				'width':'100%',
 			}
-			if (this.selected.summaryIndex < 0){
+			if (this.selected.summaryIndex < 0 && !this.selected.jumpfrom){
 				temp['display']='none'
 			}
 			return temp
@@ -474,6 +475,7 @@ var app=new Vue({
 					easing: 'easeInOutSine',
 					duration: 500,
 					complete: function(){
+						app.selected.jumpfrom = false
 						app.selected.content = ""
 						if (index>=0){
 							app.selected.summaryTarget = opEvent.target.parentNode
@@ -520,6 +522,7 @@ var app=new Vue({
 		let urlValue = urlOBJ.searchParams.get("url")
 		if (urlValue != "" && urlValue != null && urlValue != undefined){
 			this.pageStatus=page.main
+			this.selected.jumpfrom=true
 			this.GetContentInfo(urlValue)
 		}
 		this.GetSummaryInfo()
